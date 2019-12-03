@@ -7,20 +7,20 @@ package com.stgtest.framework.models;
 public class Fixture {
 
     //is this string or integer from json though?
-    Integer fixtureid;
+    private String fixtureId;
     private String name;
     private String stuff;
     private String moreStuff;
 
 
     /**
-     * Get the value of {@link #fixtureid}
+     * Get the value of {@link #fixtureId}
      *
      * @return {@link Integer}
      */
-    public Integer getId()
+    public String getId()
     {
-        return fixtureid;
+        return fixtureId;
     }
 
 

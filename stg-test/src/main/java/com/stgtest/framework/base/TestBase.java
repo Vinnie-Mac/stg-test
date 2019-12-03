@@ -11,7 +11,7 @@ public class TestBase {
 
     private static final String BASE_URI_PROPERTY_KEY = "base.uri";
     private static final String PROPERTIES = "src/main/resources/properties";
-    private static final String FIXTURE_API_INFORMATION_PROPERTIES_FILE = "properties/fixtureapiinfo.properties";
+    private static final String API_PROPERTIES_FILE = "api.properties";
 
 
     /**
@@ -23,7 +23,7 @@ public class TestBase {
     public static String getBaseUri()
     {
         return PropertiesLoader
-                .loadProperties(Paths.get(PROPERTIES, FIXTURE_API_INFORMATION_PROPERTIES_FILE).toString())
+                .loadProperties(Paths.get(PROPERTIES, API_PROPERTIES_FILE).toString())
                 .getProperty(BASE_URI_PROPERTY_KEY);
     }
 }

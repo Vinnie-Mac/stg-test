@@ -1,5 +1,7 @@
 package com.stgtest.get;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.stgtest.framework.models.Fixture;
 import com.stgtest.framework.steps.AssertionSteps;
 import com.stgtest.framework.steps.GetSteps;
@@ -15,6 +17,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -37,6 +41,17 @@ public class GetFixtureTests {
 
     @Before
     public void Setup() {
+    	String jsonValues = this.getSteps.getAllFixtures().jsonPath().prettify();
+    	
+    	Gson gson = new Gson();
+    	Type listType = new TypeToken<ArrayList<Fixture>>(){}.getType();
+    	ArrayList<Fixture> fixArray = gson.fromJson(jsonValues, listType);
+    	
+    	for(Fixture fixture : fixArray) {
+    		System.out.println(fixture.getId());
+    	}
+    	
+    	
         this.listOfAllFixtures = MapResponseToClass.getBodyValuesAsClass(this.getSteps.getAllFixtures().body(), Fixture.class);
 
     }
@@ -64,7 +79,7 @@ public class GetFixtureTests {
     {
         for (int i = 0; i < this.listOfAllFixtures.size(); i++)
         {
-            assertionSteps.assertEqual(this.listOfAllFixtures.get(i).getId(), i+1);
+            assertionSteps.assertEqual(this.listOfAllFixtures.get(i).getId(), String.valueOf(i+1));
         }
     }
 }
