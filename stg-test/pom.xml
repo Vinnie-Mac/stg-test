@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>stg-test</groupId>
+    <artifactId>stg-test</artifactId>
+    <version>1.0-SNAPSHOT</version>
+
+    <properties>
+        <java.version>1.8</java.version>
+        <google.truth.version>1.0</google.truth.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <serenity.core.version>2.0.40</serenity.core.version>
+        <serenity.junit.version>2.0.40</serenity.junit.version>
+        <serenity.rest.assured.version>2.0.40</serenity.rest.assured.version>
+        <serenity.maven.version>2.0.40</serenity.maven.version>
+        <maven.failsafe.plugin.version>3.0.0-M3</maven.failsafe.plugin.version>
+        <maven.compiler.plugin.version>3.2</maven.compiler.plugin.version>
+        <maven.surefire.plugin.version>3.0.0-M3</maven.surefire.plugin.version>
+        <timestamp>${maven.build.timestamp}</timestamp>
+        <maven.build.timestamp.format>yyyy-MM-dd_HH_mm_ss</maven.build.timestamp.format>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>net.serenity-bdd</groupId>
+            <artifactId>serenity-core</artifactId>
+            <version>${serenity.core.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>net.serenity-bdd</groupId>
+            <artifactId>serenity-junit</artifactId>
+            <version>${serenity.junit.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>net.serenity-bdd</groupId>
+            <artifactId>serenity-rest-assured</artifactId>
+            <version>${serenity.rest.assured.version}</version>
+        </dependency>
+    </dependencies>
+
+    <profiles>
+        <profile>
+            <id>automation-test</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-failsafe-plugin</artifactId>
+                        <version>${maven.failsafe.plugin.version}</version>
+                        <dependencies>
+                            <dependency>
+                                <groupId>org.apache.maven.surefire</groupId>
+                                <artifactId>surefire-junit4</artifactId>
+                                <version>${maven.failsafe.plugin.version}</version>
+                            </dependency>
+                        </dependencies>
+                        <configuration>
+                            <includes>
+                                <include>**/com.stgtest.get/*/*.java</include>
+                                <include>**/com.stgtest.get/*/*/*.java</include>
+
+                                <include>**/com.stgtest.put/*/*.java</include>
+                                <include>**/com.stgtest.put/*/*/*.java</include>
+
+                                <include>**/com.stgtest.post/*/*.java</include>
+                                <include>**/com.stgtest.post/*/*/*.java</include>
+                            </includes>
+
+                            <!-- Method to run DEPENDENT tests in parallel (Uncomment the next two lines)
+                             NOTE: This will start as many JVMs (as are specified in forkCount) up on your machine to run the test classes in
+                             parallel and dependent tests within each class will run in order so dependent
+                             The parameter forkCount defines the maximum number of JVM processes that maven-failsafe-plugin will spawn concurrently to execute the tests.
+                             test results are preserved-->
+                            <forkCount>1</forkCount>
+                            <reuseForks>true</reuseForks>
+
+                            <!-- Method to run INDEPENDENT tests in parallel (Uncomment the next two lines)
+                             NOTE: All tests will be run in parallel from the Serenity test runner -->
+                            <!--<threadCount>6</threadCount>
+                            <argLine>-Xmx1024m -XX:MaxPermSize=256m</argLine>-->
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>integration-test</goal>
+                                    <goal>verify</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>net.serenity-bdd.maven.plugins</groupId>
+                        <artifactId>serenity-maven-plugin</artifactId>
+                        <version>${serenity.maven.version}</version>
+                        <dependencies>
+                            <dependency>
+                                <groupId>net.serenity-bdd</groupId>
+                                <artifactId>serenity-core</artifactId>
+                                <version>${serenity.core.version}</version>
+                            </dependency>
+                        </dependencies>
+                        <executions>
+                            <execution>
+                                <id>serenity-reports</id>
+                                <phase>post-integration-test</phase>
+                                <goals>
+                                    <goal>aggregate</goal>
+                                </goals>
+                                <configuration>
+
+                                    <!--
+                                       The below line to have every report run saved to a new folder so no execution results are overwritten
+                                       NOTE this will eat disk space at about 20MB to $40MB+ per execution depending on size of the suite
+                                    -->
+                                    <outputDirectory>${project.basedir}/serenity-reports/Serenity_Report - ${maven.build.timestamp}</outputDirectory>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${maven.surefire.plugin.version}</version>
+                <configuration>
+                    <!-- setting skip = true means the build will not use surefire to build and run the tests as we want to use the failsafe plugin instead-->
+                    <skip>true</skip>
+                    <!-- This config entry ensures that the build continues if any test fails and
+                    ensures a serenity report is produced -->
+                    <testFailureIgnore>true</testFailureIgnore>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven.compiler.plugin.version}</version>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>
