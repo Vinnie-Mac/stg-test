@@ -83,12 +83,22 @@ public enum StatusCode {
 	}
 
 
-	public int getValue()
+	/**
+	 * Get the Integer value of status code being retrieved 
+	 * 
+	 * @return {@link Integer} integer value of the HTTP status code
+	 */
+	public Integer getValue()
 	{
 		return this.codeValue;
 	}
 
 
+	/**
+	 * Get the String value of status code being retrieved
+	 * 
+	 * @return {@link String} string value of the HTTP status code
+	 */
 	public String getValueAsString()
 	{
 		return this.codeValueAsString;

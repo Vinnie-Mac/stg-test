@@ -19,8 +19,14 @@ public class PostSteps {
     /**
      * Create new fixture on the database
      *
+     * @param body {@link Object}
      * @return {@link Response}
      */
+	/**
+	 * 
+	 * @param body
+	 * @return
+	 */
     @Step("Send a request to the database that will create a new fixture")
     public Response createNewFixture(Object body)
     {

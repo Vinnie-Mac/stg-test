@@ -23,12 +23,12 @@ public class DeleteSteps {
      * @return {@link Response}
      */
     @Step("Delete fixture by Id value of '{0}'")
-    public Response deleteFixtureById(String fixtureId)
+    public Response deleteFixtureById(Integer fixtureId)
     {
         Response response =  SerenityRest.given()
                 .baseUri(TestBase.getBaseUri())
                 .when()
-                .delete(UriPath.FIXTURE_ID.getFormattedUriPath(fixtureId));
+                .delete(UriPath.FIXTURE_ID.getFormattedUriPath(fixtureId.toString()));
         
         assertionSteps.assertEqual(response.getStatusCode(), StatusCode.OK.getValue());
         

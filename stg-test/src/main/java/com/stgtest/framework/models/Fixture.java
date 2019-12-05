@@ -1,7 +1,5 @@
 package com.stgtest.framework.models;
 
-import java.util.Map;
-
 import com.stgtest.framework.models.footballfullstate.FootballFullState;
 
 /**
@@ -10,61 +8,52 @@ import com.stgtest.framework.models.footballfullstate.FootballFullState;
  */
 public class Fixture {
 
-    private String fixtureId;
+    private Integer fixtureId;
     private FixtureStatus fixtureStatus;
     private FootballFullState footballFullState;
 
 
+   
     /**
-     * Get the value of {@link #fixtureId}
-     *
-     * @return {@link Integer}
-     */
-    public String getId()
-    {
-        return fixtureId;
-    }
-
-    /**
-     * {@link FixtureBuilder} builder pattern to create a Fixture instance more easily - use with POSt request and place
+     * {@link FixtureBuilder} builder pattern to create a Fixture instance more easily - use with POST request and place
      * into the body parameter
      */
     public static class FixtureBuilder {
-        //TODO Do the builder and make sure you have all the other fields here also pal!
-        private String stuff;
-        private String moreStuff;
-
-
+        private Integer fixtureID;
+        private FixtureStatus fixtureStatus;
+        private FootballFullState footballFullState;
+        
+      
         /**
          * FixtureBuilder constructor with mandatory field set of adding the 'name' otherwise the API will not allows a
          * fixture to be create without this value being set
          *
          * @param name {@link String} value of the fixture name
          */
-        public FixtureBuilder() {
-           
+        public FixtureBuilder(Integer id) {
+        	this.fixtureID = id;
         }
 
 
         /**
-         * Apply STUFF value
+         * Apply FixtureStatus value
          *
-         * @param stuff {@link String}
+         * @param fixtureStatus {@link FixtureStatus}
          * @return {@link FixtureBuilder}
          */
-        public FixtureBuilder withSTUFF(String stuff) {
-            this.stuff = stuff;
+        public FixtureBuilder withFixtureStatus(FixtureStatus fixtureStatus) {
+            this.fixtureStatus = fixtureStatus;
             return this;
         }
 
         /**
-         * Apply MORESTUFF value
+         * Apply FootballFullState value
          *
-         * @param moreStuff {@link String}
+         * @param footballFullState {@link FootballFullState}
          * @return {@link FixtureBuilder}
          */
-        public FixtureBuilder withMORESTUFF(String moreStuff) {
-            this.moreStuff = moreStuff;
+        public FixtureBuilder withFootballFullStateStatus(FootballFullState footballFullState) {
+            this.footballFullState = footballFullState;
             return this;
         }
 
@@ -76,7 +65,37 @@ public class Fixture {
          */
         public Fixture build() {
             Fixture fixture = new Fixture();
+            
+            fixture.fixtureId = this.fixtureID;
+            fixture.fixtureStatus = this.fixtureStatus;
+            fixture.footballFullState = this.footballFullState;
+           
             return fixture;
         }
     }
+
+
+
+	/**
+	 * @return the fixtureId
+	 */
+	public Integer getFixtureId() {
+		return fixtureId;
+	}
+
+
+	/**
+	 * @return the fixtureStatus
+	 */
+	public FixtureStatus getFixtureStatus() {
+		return fixtureStatus;
+	}
+
+
+	/**
+	 * @return the footballFullState
+	 */
+	public FootballFullState getFootballFullState() {
+		return footballFullState;
+	}
 }

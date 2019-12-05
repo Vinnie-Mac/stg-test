@@ -1,7 +1,8 @@
 package com.stgtest.delete;
 
-import com.google.gson.reflect.TypeToken;
 import com.stgtest.framework.models.Fixture;
+import com.stgtest.framework.models.FixtureStatus;
+import com.stgtest.framework.models.footballfullstate.FootballFullState;
 import com.stgtest.framework.steps.AssertionSteps;
 import com.stgtest.framework.steps.DeleteSteps;
 import com.stgtest.framework.steps.GetSteps;
@@ -18,7 +19,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -31,6 +31,7 @@ import java.util.List;
 public class DeleteFixtureTests {
 
     private Fixture fixtureToSendToDatabase;
+    private Integer fixtureIdForFixtureToSendViaPostRequest = 333;
     private List<Fixture> listOfAllFixturesAfterCreatingNewFixture;
     private List<Fixture> listOfAllFixturesBeforeCreatingNewFixture;
 
@@ -49,15 +50,15 @@ public class DeleteFixtureTests {
 
     @Before
     public void Setup() {
+    	this.fixtureToSendToDatabase = new Fixture.FixtureBuilder(this.fixtureIdForFixtureToSendViaPostRequest)
+    			.withFixtureStatus(new FixtureStatus())
+    			.withFootballFullStateStatus(new FootballFullState())
+    			.build();
+    	
+    	
         this.listOfAllFixturesBeforeCreatingNewFixture = MapResponseToClass.getJSONObjectsAsClass(
         		this.getSteps.getAllFixtures().jsonPath().prettify(), 
         		Fixture.class);
-
-        //TODO finish off this builder lad...
-//        this.fixtureToSendToDatabase = new Fixture.FixtureBuilder("Test")
-//                .withSTUFF("STUFF")
-//                .withMORESTUFF("MORESTUFF")
-//                .build();
 
         this.postSteps.createNewFixture(this.fixtureToSendToDatabase);
 
@@ -73,15 +74,7 @@ public class DeleteFixtureTests {
     @Title("Create fixture, delete it then assert it no longer appears within the database")
     public void createFixtureThenDeleteThenAssertNoLongerExistsTest()
     {
-        Fixture fixtureToDelete = this.listOfAllFixturesAfterCreatingNewFixture.stream()
-        //change the 5 value to something better?
-                .filter(fixture -> fixture.getId().equals("5"))
-                .findAny()
-                .orElse(null);
-
-        this.deleteSteps.deleteFixtureById(fixtureToDelete.getId().toString());
-
-        this.deleteSteps.deleteFixtureById("4");
+        this.deleteSteps.deleteFixtureById(this.fixtureIdForFixtureToSendViaPostRequest);
 
         List<Fixture> listOfAllFixturesAfterDeletion = MapResponseToClass.getJSONObjectsAsClass(
         		this.getSteps.getAllFixtures().jsonPath().prettify(), 
@@ -89,8 +82,8 @@ public class DeleteFixtureTests {
 
         for(int i = 0; i < listOfAllFixturesAfterDeletion.size(); i++) {
             assertionSteps.assertEqual(
-                    listOfAllFixturesAfterDeletion.get(i).getId(),
-                    this.listOfAllFixturesBeforeCreatingNewFixture.get(i).getId()
+                    listOfAllFixturesAfterDeletion.get(i).getFixtureId().toString(),
+                    this.listOfAllFixturesBeforeCreatingNewFixture.get(i).getFixtureId().toString()
             );
         }
     }

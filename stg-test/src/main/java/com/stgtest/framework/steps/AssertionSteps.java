@@ -16,7 +16,7 @@ public class AssertionSteps {
      * @param actual {@link String} actual string value of object
      * @param expected {@link String} expected integer value to be compared against
      */
-	@Step("")
+	@Step("Assert that the actual String value of {0} is equal to the expected String value of {1}")
     public void assertEqual(String actual, String expected)
     {
         Assert.assertEquals(actual, expected);
@@ -29,7 +29,7 @@ public class AssertionSteps {
      * @param actual {@link Integer} actual integer value of object
      * @param expected {@link Integer} expected integer value to be compared against
      */
-	@Step("")
+	@Step("Assert that the actual value Integer of {0} is equal to the expected Integer value of {1}")
     public void assertEqual(Integer actual, Integer expected)
     {
         Assert.assertEquals(actual, expected);
@@ -37,10 +37,12 @@ public class AssertionSteps {
 	
     
     /**
+     * Assertions on whether or not the body of a HTTP response via REST Assured contains values and is not
+     * empty
      * 
-     * @param response
+     * @param {@link Response} rest assured response object
      */
-	@Step("")
+	@Step("Assert that the response body contains body values and is not coming back as empty")
 	public void assertThatBodyIsnotEmpty(Response response) {
 		Assert.assertNotEquals(response.getBody().asString().length(), 0);
 	}

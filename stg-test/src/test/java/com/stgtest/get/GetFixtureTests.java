@@ -2,7 +2,6 @@ package com.stgtest.get;
 
 import com.google.gson.reflect.TypeToken;
 import com.stgtest.framework.models.Fixture;
-import com.stgtest.framework.models.footballfullstate.FootballFullState;
 import com.stgtest.framework.steps.AssertionSteps;
 import com.stgtest.framework.steps.GetSteps;
 import com.stgtest.framework.utils.MapResponseToClass;
@@ -78,7 +77,7 @@ public class GetFixtureTests {
         for (int i = 0; i < this.listOfAllFixtures.size(); i++)
         {	
         	Integer expected = i+1;
-        	String actual =  this.listOfAllFixtures.get(i).getId();
+        	String actual =  this.listOfAllFixtures.get(i).getFixtureId().toString();
         	
             assertionSteps.assertEqual(actual, expected.toString());
         }

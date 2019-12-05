@@ -34,6 +34,7 @@ import java.util.List;
 public class PostFixtureTests {
 
     private List<Fixture> listOfAllFixtures;
+    private String fixtureIdForFixtureToSendViaPostRequest = "333";
 
     @Shared
     GetSteps getSteps;
@@ -88,10 +89,12 @@ public class PostFixtureTests {
     {
         //create a builder for a fixture here so that you may send it off via body parameter in the post method
         Fixture fixtureSentToDatabase = new Fixture();
+        
+        
         this.postSteps.createNewFixture(fixtureSentToDatabase);
 
-        Fixture fixtureReceivedFromDatabase = this.getSteps.getNewlyCreatedFixtureWhenAvailable("4");
+        Fixture fixtureReceivedFromDatabase = this.getSteps.getNewlyCreatedFixtureWhenAvailable(this.fixtureIdForFixtureToSendViaPostRequest);
 
-        assertionSteps.assertEqual(fixtureSentToDatabase.getId(), fixtureReceivedFromDatabase.getId());
+        assertionSteps.assertEqual(fixtureSentToDatabase.getFixtureId(), fixtureReceivedFromDatabase.getFixtureId());
     }
 }
