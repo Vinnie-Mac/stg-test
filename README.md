@@ -8,5 +8,6 @@ Submission for the following task - https://github.com/thestarsgroup/technical_t
 3. Enter the following commands into your terminal window ``
 
 #### IntelliJ IDEA
-4. Launch IntelliJ and be sure to begint he 'Open Project' process. Simply navigate to the folder location where the pom.xml file is located and load up all of the code within the IDEA itself.
-5. Once the project has loaded and Maven dependancies have been download and you've done a successful build of the project, head over to Edit configurations and type int the following serentity/maven based commands/flags -> ``
+1. Launch IntelliJ and be sure to begint he 'Open Project' process. 
+2. Select the folder location containing the pom.xml file (it will be the `stg-test` root directory)
+3. Once the project has loaded and Maven dependancies have been download and you've done a successful build of the project, head over to Edit configurations and type int the following serentity/maven based commands/flags -> ``
