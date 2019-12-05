@@ -79,11 +79,12 @@ public class GetSteps {
                 // or use anything more unique than id in order to gather the fixture more accurately
             } else if (listOfFixturesBeforeUpdate.size() == MapResponseToClass.getJSONObjectsAsClass(
             		this.getAllFixtures().jsonPath().prettify(), 
-            		new TypeToken<ArrayList<Fixture>>(){}.getType()).size()) {
+            		Fixture.class).size()) {
             	
                 //you're doing the operation again so this is quite costly really - how to enhance or minify your impact to api performance??
                 fixturesReceivedFromDatabase = MapResponseToClass.getJSONObjectsAsClass(
-                				this.getAllFixtures().jsonPath().prettify(), new TypeToken<ArrayList<Fixture>>(){}.getType());
+                				this.getAllFixtures().jsonPath().prettify(), 
+                				Fixture.class);
                 
                 break;
             } else {
@@ -130,7 +131,7 @@ public class GetSteps {
                 //you're doing the operation again so this is quite costly really - how to enhance or minify your impact to api performance??
                 fixtureReceivedFromDatabase = MapResponseToClass.getJSONObjectAsClass(
                 		this.getFixtureById(fixtureCriteria).jsonPath().prettify(), 
-                		new TypeToken<Fixture>(){}.getType());
+                		Fixture.class);
                 
                 break;
             } else {

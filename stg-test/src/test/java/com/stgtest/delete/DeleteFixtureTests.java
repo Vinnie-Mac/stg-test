@@ -1,5 +1,6 @@
 package com.stgtest.delete;
 
+import com.google.gson.reflect.TypeToken;
 import com.stgtest.framework.models.Fixture;
 import com.stgtest.framework.steps.AssertionSteps;
 import com.stgtest.framework.steps.DeleteSteps;
@@ -17,6 +18,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -47,13 +49,15 @@ public class DeleteFixtureTests {
 
     @Before
     public void Setup() {
-        this.listOfAllFixturesBeforeCreatingNewFixture = MapResponseToClass.getBodyValuesAsClass(this.getSteps.getAllFixtures(), Fixture.class);
+        this.listOfAllFixturesBeforeCreatingNewFixture = MapResponseToClass.getJSONObjectsAsClass(
+        		this.getSteps.getAllFixtures().jsonPath().prettify(), 
+        		Fixture.class);
 
         //TODO finish off this builder lad...
-        this.fixtureToSendToDatabase = new Fixture.FixtureBuilder("Test")
-                .withSTUFF("STUFF")
-                .withMORESTUFF("MORESTUFF")
-                .build();
+//        this.fixtureToSendToDatabase = new Fixture.FixtureBuilder("Test")
+//                .withSTUFF("STUFF")
+//                .withMORESTUFF("MORESTUFF")
+//                .build();
 
         this.postSteps.createNewFixture(this.fixtureToSendToDatabase);
 
@@ -79,7 +83,9 @@ public class DeleteFixtureTests {
 
         this.deleteSteps.deleteFixtureById("4");
 
-        List<Fixture> listOfAllFixturesAfterDeletion = MapResponseToClass.getBodyValuesAsClass(this.getSteps.getAllFixtures(), Fixture.class);
+        List<Fixture> listOfAllFixturesAfterDeletion = MapResponseToClass.getJSONObjectsAsClass(
+        		this.getSteps.getAllFixtures().jsonPath().prettify(), 
+        		Fixture.class);
 
         for(int i = 0; i < listOfAllFixturesAfterDeletion.size(); i++) {
             assertionSteps.assertEqual(

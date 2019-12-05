@@ -30,8 +30,8 @@ public class MapResponseToClass {
      * @return {@link Class} this will return the class object along with values assigned to the internal fields based upon what was in the JSON
      */
     @Step("Map JSON body value/field to a given {1} java class")
-    public static <T> T getJSONObjectAsClass(String jsonValues, Type type) {
-        return gson.fromJson(jsonValues, type);
+    public static <T> T getJSONObjectAsClass(String jsonValues, Class<T> clazz) {
+        return gson.fromJson(jsonValues, clazz);
     }
 
 
@@ -46,7 +46,13 @@ public class MapResponseToClass {
      * @return {@link List<T>} this will return the class object list - each class instance having the internal field values mapped according to the instances within response body JSON fields
      */
     @Step("Map JSON body values/fields to a given java class - multiple instances of {1} class as there are multiple results being retrieved")
-    public static <T> List<T> getJSONObjectsAsClass(String jsonValues, Type listType) {
-    	return Arrays.asList(gson.fromJson(jsonValues, listType));
+    public static <T> List<T> getJSONObjectsAsClass(String jsonValues, Class<T> clazz) {
+    	return Arrays.asList(gson.fromJson(jsonValues, clazz));
+    }
+    
+    
+    public static void dealWithJsonArrays()
+    {
+    	
     }
 }

@@ -11,11 +11,8 @@ import com.stgtest.framework.models.footballfullstate.FootballFullState;
 public class Fixture {
 
     private String fixtureId;
-    private String name;
-    private String stuff;
-    private String moreStuff;
-    private Map<String, FixtureStatus> fixtureStatus;
-    private Map<String, FootballFullState> footballFullState;
+    private FixtureStatus fixtureStatus;
+    private FootballFullState footballFullState;
 
 
     /**
@@ -28,47 +25,12 @@ public class Fixture {
         return fixtureId;
     }
 
-
-    /**
-     * Get the value of {@link #name}
-     *
-     * @return {@link String}
-     */
-    public String getName()
-    {
-        return name;
-    }
-
-
-    /**
-     * Get the value of {@link #stuff}
-     *
-     * @return {@link String}
-     */
-    public String getstuff()
-    {
-        return stuff;
-    }
-
-
-    /**
-     * Get the value of {@link #moreStuff}
-     *
-     * @return {@link String}
-     */
-    public String getMoreStuff()
-    {
-        return moreStuff;
-    }
-
-
     /**
      * {@link FixtureBuilder} builder pattern to create a Fixture instance more easily - use with POSt request and place
      * into the body parameter
      */
     public static class FixtureBuilder {
         //TODO Do the builder and make sure you have all the other fields here also pal!
-        private String name;
         private String stuff;
         private String moreStuff;
 
@@ -79,8 +41,8 @@ public class Fixture {
          *
          * @param name {@link String} value of the fixture name
          */
-        public FixtureBuilder(String name) {
-            this.name = name.toLowerCase();//is this right? what about spaces?
+        public FixtureBuilder() {
+           
         }
 
 
@@ -114,11 +76,6 @@ public class Fixture {
          */
         public Fixture build() {
             Fixture fixture = new Fixture();
-
-            fixture.name = this.name;
-            fixture.stuff = this.stuff;
-            fixture.moreStuff = this.moreStuff;
-
             return fixture;
         }
     }
