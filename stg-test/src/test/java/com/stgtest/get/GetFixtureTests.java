@@ -17,6 +17,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -35,16 +37,17 @@ public class GetFixtureTests {
     @Shared
     AssertionSteps assertionSteps;
     
-    private List<Fixture[]> listOfAllFixtures;
+    private List<Fixture> listOfAllFixtures;
 
     @Before
     public void Setup() {
-    	String test = this.getSteps.getAllFixtures().jsonPath().prettify();
+    	//Type token needed at fixture response beginning due to root element of JSON being '[{...}]' and not the usual '{...}'
+    	Type fixtureListType = new TypeToken<ArrayList<Fixture>>() {}.getType();
     	
         this.listOfAllFixtures = 
         		MapResponseToClass.getJSONObjectsAsClass(
         				this.getSteps.getAllFixtures().jsonPath().prettify(), 
-        				Fixture[].class);
+        				fixtureListType);
 
     }
 
@@ -73,8 +76,11 @@ public class GetFixtureTests {
     public void assertAllFixturesContainIdValueTest()
     {
         for (int i = 0; i < this.listOfAllFixtures.size(); i++)
-        {
-//            assertionSteps.assertEqual(this.listOfAllFixtures.get(i)., String.valueOf(i+1));
+        {	
+        	Integer expected = i+1;
+        	String actual =  this.listOfAllFixtures.get(i).getId();
+        	
+            assertionSteps.assertEqual(actual, expected.toString());
         }
     }
 }

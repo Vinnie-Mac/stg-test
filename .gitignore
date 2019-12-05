@@ -1,2 +1,6 @@
+/target/
 .DS_Store
-.idea/
+stg-test/.idea
+.idea
+stg-test/.DS_Store
+

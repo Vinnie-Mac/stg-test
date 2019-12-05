@@ -42,12 +42,12 @@ public class MapResponseToClass {
      * (the fields of the given class need tobe an exact match to those being returned in the JSON)</p>
      *
      * @param responseBody {@link ResponseBody} rest assured response object contained the necessary JSON information within the response body
-     * @param clazz {@link Class} any given java class object to map values to
+     * @param fixtureListType {@link Class} any given java class object to map values to
      * @return {@link List<T>} this will return the class object list - each class instance having the internal field values mapped according to the instances within response body JSON fields
      */
     @Step("Map JSON body values/fields to a given java class - multiple instances of {1} class as there are multiple results being retrieved")
-    public static <T> List<T> getJSONObjectsAsClass(String jsonValues, Class<T> clazz) {
-    	return Arrays.asList(gson.fromJson(jsonValues, clazz));
+    public static <T> List<T> getJSONObjectsAsClass(String jsonValues, Type fixtureListType) {
+    	return gson.fromJson(jsonValues, fixtureListType);
     }
     
     

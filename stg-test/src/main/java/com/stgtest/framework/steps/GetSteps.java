@@ -2,13 +2,16 @@ package com.stgtest.framework.steps;
 
 import com.google.gson.reflect.TypeToken;
 import com.stgtest.framework.base.TestBase;
+import com.stgtest.framework.components.StatusCode;
 import com.stgtest.framework.components.UriPath;
 import com.stgtest.framework.models.Fixture;
 import com.stgtest.framework.utils.MapResponseToClass;
 import io.restassured.response.Response;
 import net.serenitybdd.rest.SerenityRest;
+import net.thucydides.core.annotations.Shared;
 import net.thucydides.core.annotations.Step;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,9 +19,15 @@ import java.util.List;
  * {@link GetSteps} Steps class to use the GET http method exclusively in test operations
  */
 public class GetSteps {
+	@Shared
+	AssertionSteps assertionSteps;
 
-    /*Anything higher than 3 minutes means a fault lies within API however I am open to hear explanation if 3 minutes would need to be increased */
+	/* Type token needed at fixture response beginning due to root element of JSON being '[{...}]' and not the usual '{...}' */
+	private Type fixtureListType = new TypeToken<ArrayList<Fixture>>() {}.getType();
+		
+    /* Anything higher than 3 minutes means a fault lies within API however I am open to hear explanation if 3 minutes would need to be increased */
     private Integer latencyDelayWaitDuration = 180_000;
+    
 
     /**
      * Gather full list of fixtures currently stored within the database
@@ -28,26 +37,34 @@ public class GetSteps {
     @Step("Gather all fixtures currently within the database")
     public Response getAllFixtures()
     {
-        return  SerenityRest.given()
+        Response response = SerenityRest.given()
                         .baseUri(TestBase.getBaseUri())
                         .when()
                         .get(UriPath.ALL_FIXTURES.getUriPathString());
+        
+        assertionSteps.assertEqual(response.getStatusCode(), StatusCode.OK.getValue());
+        
+        return response;
     }
 
 
     /**
      * Gather a singular fixture from the database, using the fixtureId value only
      *
-     * @param fixtureId {@link String} fixtureid value
+     * @param fixtureId {@link String} fixtureId value
      * @return {@link Response}
      */
     @Step("Gather a singular fixture by ID value only")
     public Response getFixtureById(String fixtureId)
     {
-        return SerenityRest.given()
+        Response response = SerenityRest.given()
                 .baseUri(TestBase.getBaseUri())
                 .when()
                 .get(UriPath.FIXTURE_ID.getFormattedUriPath(fixtureId));
+        
+        assertionSteps.assertEqual(response.getStatusCode(), StatusCode.OK.getValue());
+        
+        return response;
     }
 
 
@@ -69,22 +86,21 @@ public class GetSteps {
      */
     @Step("Gather a full listof fixtures after the system receives a brand new fixture - handling the built-in system latency/delay")
     public List<Fixture> getUpdatedListOfAllFixturesWhenAvailable(List<Fixture> listOfFixturesBeforeUpdate) {
-        List<Fixture> fixturesReceivedFromDatabase = new ArrayList();
         Long currentTimeOutsideOfLoop = System.currentTimeMillis();
+        List<Fixture> fixturesReceivedFromDatabase = new ArrayList<Fixture>();
 
         while(true) {
             Long currentTimeDuringLoop = System.currentTimeMillis();
             if(currentTimeDuringLoop - currentTimeOutsideOfLoop >= this.latencyDelayWaitDuration) {
                 break;
-                // or use anything more unique than id in order to gather the fixture more accurately
             } else if (listOfFixturesBeforeUpdate.size() == MapResponseToClass.getJSONObjectsAsClass(
             		this.getAllFixtures().jsonPath().prettify(), 
             		Fixture.class).size()) {
             	
-                //you're doing the operation again so this is quite costly really - how to enhance or minify your impact to api performance??
+                //you're doing the operation again so this is quite costly really - how to enhance or minify your impact to API performance??
                 fixturesReceivedFromDatabase = MapResponseToClass.getJSONObjectsAsClass(
                 				this.getAllFixtures().jsonPath().prettify(), 
-                				Fixture.class);
+                				fixtureListType);
                 
                 break;
             } else {
@@ -92,7 +108,7 @@ public class GetSteps {
             }
 
             try{
-                Thread.sleep(500);//slight sleep wait in order to not absolutely hammer the api with requests within the loop
+                Thread.sleep(500);//slight sleep wait in order to not absolutely hammer the API with requests within the loop
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -116,8 +132,8 @@ public class GetSteps {
      * @param fixtureCriteria {@link String} criteria to be used to gather a specific fixture
      * @return {@link Fixture} object retrieved from database
      */
-    @Step("Gather a singular, newly created fixture by {CRITERIA} which handles built-in system latency/delay")
-    public Fixture getNewlyCreatedFixtureWhenAvailable(String fixtureCriteria) {
+    @Step("Gather a singular, newly created fixture by id which handles built-in system latency/delay")
+    public Fixture getNewlyCreatedFixtureWhenAvailable(String fixtureId) {
         Fixture fixtureReceivedFromDatabase = new Fixture();
         Long currentTimeOutsideOfLoop = System.currentTimeMillis();
 
@@ -125,12 +141,11 @@ public class GetSteps {
             Long currentTimeDuringLoop = System.currentTimeMillis();
             if(currentTimeDuringLoop - currentTimeOutsideOfLoop >= this.latencyDelayWaitDuration) {
                 break;
-                // or use anything more unique than id in order to gather the fixture more accurately
-            } else if (this.getFixtureById(fixtureCriteria).body().asString().length() >= 0) {
+            } else if (this.getFixtureById(fixtureId).body().asString().length() >= 0) {
             	
-                //you're doing the operation again so this is quite costly really - how to enhance or minify your impact to api performance??
+                //you're doing the operation again so this is quite costly really - how to enhance or minify your impact to API performance??
                 fixtureReceivedFromDatabase = MapResponseToClass.getJSONObjectAsClass(
-                		this.getFixtureById(fixtureCriteria).jsonPath().prettify(), 
+                		this.getFixtureById(fixtureId).jsonPath().prettify(), 
                 		Fixture.class);
                 
                 break;
@@ -139,7 +154,7 @@ public class GetSteps {
             }
 
             try{
-                Thread.sleep(500);//slight sleep wait in order to not absolutely hammer the api with requests within the loop
+                Thread.sleep(500);//slight sleep wait in order to not absolutely hammer the API with requests within the loop
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

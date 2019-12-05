@@ -1,9 +1,11 @@
 package com.stgtest.framework.steps;
 
 import com.stgtest.framework.base.TestBase;
+import com.stgtest.framework.components.StatusCode;
 import com.stgtest.framework.components.UriPath;
 import io.restassured.response.Response;
 import net.serenitybdd.rest.SerenityRest;
+import net.thucydides.core.annotations.Shared;
 import net.thucydides.core.annotations.Step;
 
 /**
@@ -11,6 +13,10 @@ import net.thucydides.core.annotations.Step;
  */
 public class DeleteSteps {
 
+	@Shared
+	AssertionSteps assertionSteps;
+	
+	
     /**
      * Delete a fixture using the fixture id that is currently stored within the database
      *
@@ -19,9 +25,13 @@ public class DeleteSteps {
     @Step("Delete fixture by Id value of '{0}'")
     public Response deleteFixtureById(String fixtureId)
     {
-        return  SerenityRest.given()
+        Response response =  SerenityRest.given()
                 .baseUri(TestBase.getBaseUri())
                 .when()
                 .delete(UriPath.FIXTURE_ID.getFormattedUriPath(fixtureId));
+        
+        assertionSteps.assertEqual(response.getStatusCode(), StatusCode.OK.getValue());
+        
+        return response;
     }
 }
