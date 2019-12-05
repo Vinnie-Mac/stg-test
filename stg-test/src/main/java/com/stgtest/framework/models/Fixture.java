@@ -1,16 +1,21 @@
 package com.stgtest.framework.models;
 
+import java.util.Map;
+
+import com.stgtest.framework.models.footballfullstate.FootballFullState;
+
 /**
  * {@link Fixture} class containing the Fixture object values and the FixtureBuilder used to construct a new fixture if
  * needing to create one in the system/database
  */
 public class Fixture {
 
-    //is this string or integer from json though?
     private String fixtureId;
     private String name;
     private String stuff;
     private String moreStuff;
+    private Map<String, FixtureStatus> fixtureStatus;
+    private Map<String, FootballFullState> footballFullState;
 
 
     /**

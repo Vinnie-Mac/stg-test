@@ -31,28 +31,20 @@ import java.util.List;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class GetFixtureTests {
 
-    private List<Fixture> listOfAllFixtures;
-
     @Shared
     GetSteps getSteps;
 
     @Shared
     AssertionSteps assertionSteps;
+    
+    private List<Fixture> listOfAllFixtures;
 
     @Before
     public void Setup() {
-    	String jsonValues = this.getSteps.getAllFixtures().jsonPath().prettify();
-    	
-    	Gson gson = new Gson();
-    	Type listType = new TypeToken<ArrayList<Fixture>>(){}.getType();
-    	ArrayList<Fixture> fixArray = gson.fromJson(jsonValues, listType);
-    	
-    	for(Fixture fixture : fixArray) {
-    		System.out.println(fixture.getId());
-    	}
-    	
-    	
-        this.listOfAllFixtures = MapResponseToClass.getBodyValuesAsClass(this.getSteps.getAllFixtures().body(), Fixture.class);
+        this.listOfAllFixtures = 
+        		MapResponseToClass.getJSONObjectsAsClass(
+        				this.getSteps.getAllFixtures().jsonPath().prettify(), 
+        				new TypeToken<ArrayList<Fixture>>(){}.getType());
 
     }
 

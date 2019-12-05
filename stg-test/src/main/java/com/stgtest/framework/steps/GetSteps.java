@@ -1,5 +1,6 @@
 package com.stgtest.framework.steps;
 
+import com.google.gson.reflect.TypeToken;
 import com.stgtest.framework.base.TestBase;
 import com.stgtest.framework.components.UriPath;
 import com.stgtest.framework.models.Fixture;
@@ -76,9 +77,14 @@ public class GetSteps {
             if(currentTimeDuringLoop - currentTimeOutsideOfLoop >= this.latencyDelayWaitDuration) {
                 break;
                 // or use anything more unique than id in order to gather the fixture more accurately
-            } else if (listOfFixturesBeforeUpdate.size() == MapResponseToClass.getBodyValuesAsClass(this.getAllFixtures().body(), Fixture.class).size()) {
+            } else if (listOfFixturesBeforeUpdate.size() == MapResponseToClass.getJSONObjectsAsClass(
+            		this.getAllFixtures().jsonPath().prettify(), 
+            		new TypeToken<ArrayList<Fixture>>(){}.getType()).size()) {
+            	
                 //you're doing the operation again so this is quite costly really - how to enhance or minify your impact to api performance??
-                fixturesReceivedFromDatabase = MapResponseToClass.getBodyValuesAsClass(this.getAllFixtures(), Fixture.class);
+                fixturesReceivedFromDatabase = MapResponseToClass.getJSONObjectsAsClass(
+                				this.getAllFixtures().jsonPath().prettify(), new TypeToken<ArrayList<Fixture>>(){}.getType());
+                
                 break;
             } else {
                 System.out.println("Fixture list not updated due to latency/delay in the system. Retrying to gather fixtures again pal...");
@@ -120,8 +126,12 @@ public class GetSteps {
                 break;
                 // or use anything more unique than id in order to gather the fixture more accurately
             } else if (this.getFixtureById(fixtureCriteria).body().asString().length() >= 0) {
+            	
                 //you're doing the operation again so this is quite costly really - how to enhance or minify your impact to api performance??
-                fixtureReceivedFromDatabase = MapResponseToClass.getBodyValueAsClass(this.getFixtureById(fixtureCriteria), Fixture.class);
+                fixtureReceivedFromDatabase = MapResponseToClass.getJSONObjectAsClass(
+                		this.getFixtureById(fixtureCriteria).jsonPath().prettify(), 
+                		new TypeToken<Fixture>(){}.getType());
+                
                 break;
             } else {
                 System.out.println("Fixture not yet retrieved due to latency/delay in the system. Retrying to gather fixture again pal...");

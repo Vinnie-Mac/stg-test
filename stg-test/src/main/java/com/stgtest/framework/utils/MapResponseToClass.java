@@ -3,13 +3,22 @@ package com.stgtest.framework.utils;
 import io.restassured.response.ResponseBody;
 import net.thucydides.core.annotations.Step;
 
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.stgtest.framework.models.Fixture;
 
 /**
  * {@link MapResponseToClass} class responsible for mapping JSON values to their corresponding Java class (POJO)
  */
 public class MapResponseToClass {
+	static Gson gson = new Gson();
+	
+	
     /**
      * <h3>This function will take a singular value from the response body and map it to a given class object.</h3>
      *
@@ -21,8 +30,8 @@ public class MapResponseToClass {
      * @return {@link Class} this will return the class object along with values assigned to the internal fields based upon what was in the JSON
      */
     @Step("Map JSON body value/field to a given {1} java class")
-    public static <T> T getBodyValueAsClass(ResponseBody responseBody, Class<T> clazz) {
-        return responseBody.as(clazz);
+    public static <T> T getJSONObjectAsClass(String jsonValues, Type type) {
+        return gson.fromJson(jsonValues, type);
     }
 
 
@@ -37,7 +46,7 @@ public class MapResponseToClass {
      * @return {@link List<T>} this will return the class object list - each class instance having the internal field values mapped according to the instances within response body JSON fields
      */
     @Step("Map JSON body values/fields to a given java class - multiple instances of {1} class as there are multiple results being retrieved")
-    public static <T> List<T> getBodyValuesAsClass(ResponseBody responseBody, Class<T> clazz) {
-        return Arrays.asList(responseBody.as(clazz));
+    public static <T> List<T> getJSONObjectsAsClass(String jsonValues, Type listType) {
+    	return Arrays.asList(gson.fromJson(jsonValues, listType));
     }
 }
