@@ -3,8 +3,10 @@ package com.stgtest.framework.steps;
 import com.google.gson.reflect.TypeToken;
 import com.stgtest.framework.base.TestBase;
 import com.stgtest.framework.components.StatusCode;
+import com.stgtest.framework.components.Team;
 import com.stgtest.framework.components.UriPath;
 import com.stgtest.framework.models.Fixture;
+import com.stgtest.framework.models.footballfullstate.Teams;
 import com.stgtest.framework.utils.MapResponseToClass;
 import io.restassured.response.Response;
 import net.serenitybdd.rest.SerenityRest;
@@ -58,12 +60,12 @@ public class GetSteps {
      * @return {@link Response}
      */
     @Step("Gather a singular fixture by ID value only")
-    public Response getFixtureById(String fixtureId)
+    public Response getFixtureById(Long fixtureId)
     {
         Response response = SerenityRest.given()
                 .baseUri(TestBase.getBaseUri())
                 .when()
-                .get(UriPath.FIXTURE_ID.getFormattedUriPath(fixtureId));
+                .get(UriPath.FIXTURE_ID.getFormattedUriPath(fixtureId.toString()));
         
         assertionSteps.assertEqual(response.getStatusCode(), StatusCode.OK.getValue());
         
@@ -96,9 +98,8 @@ public class GetSteps {
             Long currentTimeDuringLoop = System.currentTimeMillis();
             if(currentTimeDuringLoop - currentTimeOutsideOfLoop >= this.latencyDelayWaitDuration) {
                 break;
-            } else if (listOfFixturesBeforeUpdate.size() == MapResponseToClass.getJSONObjectsAsClass(
-            		this.getAllFixtures().jsonPath().prettify(), 
-            		Fixture.class).size()) {
+            } else if (listOfFixturesBeforeUpdate.size() < 
+            		MapResponseToClass.getJSONObjectsAsClass(this.getAllFixtures().jsonPath().prettify(), Fixture.class).size()) {
             	
                 //you're doing the operation again so this is quite costly really - how to enhance or minify your impact to API performance??
                 fixturesReceivedFromDatabase = MapResponseToClass.getJSONObjectsAsClass(
@@ -121,7 +122,7 @@ public class GetSteps {
 
 
     /**
-     * Get a fixture by {CRITERIA HERE} when system makes it available.
+     * Get a fixture by ID when system makes it available.
      *
      * <p>This method is useful when immediately trying to retrieve a fixture that has just been created within the database.
      * A built-in system delay of random value (imitation of latency) prevents you from immediately gathering a newly created fixture.
@@ -136,7 +137,7 @@ public class GetSteps {
      * @return {@link Fixture} object retrieved from database
      */
     @Step("Gather a singular, newly created fixture by id which handles built-in system latency/delay")
-    public Fixture getNewlyCreatedFixtureWhenAvailable(String fixtureId) {
+    public Fixture getNewlyCreatedFixtureWhenAvailable(Long fixtureId, List<Fixture> listOfFixturesBeforeUpdate) {
         Fixture fixtureReceivedFromDatabase = new Fixture();
         Long currentTimeOutsideOfLoop = System.currentTimeMillis();
 
@@ -144,7 +145,8 @@ public class GetSteps {
             Long currentTimeDuringLoop = System.currentTimeMillis();
             if(currentTimeDuringLoop - currentTimeOutsideOfLoop >= this.latencyDelayWaitDuration) {
                 break;
-            } else if (this.getFixtureById(fixtureId).body().asString().length() >= 0) {
+            } else if (listOfFixturesBeforeUpdate.size() < 
+            		MapResponseToClass.getJSONObjectsAsClass(this.getAllFixtures().jsonPath().prettify(),fixtureListType).size()) {
             	
                 //you're doing the operation again so this is quite costly really - how to enhance or minify your impact to API performance??
                 fixtureReceivedFromDatabase = MapResponseToClass.getJSONObjectAsClass(
@@ -163,5 +165,23 @@ public class GetSteps {
             }
         }
         return fixtureReceivedFromDatabase;
+    }
+    
+    
+    /**
+     * Return a specific team by association - whether it be the HOME team or the AWAY team, this method will find either once you
+     * pass in the necessary information to the parameter
+     * 
+     * @param {@link List<Teams>} teamsList the teams within the list to be searched on
+     * @param <@link String> association value in which to search with
+     * @return
+     */
+    @Step("Get the {1} team from a list of teams")
+    public String getTeamByAssociation(List<Teams> teamsList, String association) {
+    	return teamsList.stream()
+    			.filter(teamAssociation -> teamAssociation.getAssociation().equals(association))
+    			.findAny()
+    			.orElse(null)
+    			.getName();
     }
 }

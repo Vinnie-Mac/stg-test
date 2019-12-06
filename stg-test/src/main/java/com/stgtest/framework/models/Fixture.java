@@ -10,7 +10,7 @@ import com.stgtest.framework.models.footballfullstate.FootballFullState;
  */
 public class Fixture {
 
-    private Integer fixtureId;
+    private Long fixtureId;
     private FixtureStatus fixtureStatus;
     private FootballFullState footballFullState;
 
@@ -21,7 +21,7 @@ public class Fixture {
      * into the body parameter
      */
     public static class FixtureBuilder {
-        private Integer fixtureID;
+        private Long fixtureID;
         private FixtureStatus fixtureStatus;
         private FootballFullState footballFullState;
         
@@ -32,7 +32,7 @@ public class Fixture {
          *
          * @param name {@link String} value of the fixture name
          */
-        public FixtureBuilder(Integer id) {
+        public FixtureBuilder(Long id) {
         	this.fixtureID = id;
         }
 
@@ -81,7 +81,7 @@ public class Fixture {
 	/**
 	 * @return the fixtureId
 	 */
-	public Integer getFixtureId() {
+	public Long getFixtureId() {
 		return fixtureId;
 	}
 

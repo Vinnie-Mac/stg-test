@@ -2,15 +2,18 @@ package com.stgtest.post;
 
 import com.google.gson.reflect.TypeToken;
 import com.stgtest.framework.components.Period;
+import com.stgtest.framework.components.Team;
 import com.stgtest.framework.models.Fixture;
 import com.stgtest.framework.models.FixtureStatus;
 import com.stgtest.framework.models.footballfullstate.FootballFullState;
 import com.stgtest.framework.models.footballfullstate.Goals;
+import com.stgtest.framework.models.footballfullstate.Teams;
 import com.stgtest.framework.steps.AssertionSteps;
 import com.stgtest.framework.steps.GetSteps;
 import com.stgtest.framework.steps.PostSteps;
 import com.stgtest.framework.utils.MapResponseToClass;
 import com.stgtest.framework.utils.ModelGenerator;
+import com.stgtest.framework.utils.TimeUtils;
 
 import net.serenitybdd.junit.runners.SerenityRunner;
 import net.thucydides.core.annotations.Shared;
@@ -25,7 +28,6 @@ import org.junit.runners.MethodSorters;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -45,59 +47,66 @@ import java.util.List;
 @RunWith(SerenityRunner.class)
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class PostFixtureTests {
-
-	private Integer fixtureId = 333;
-	private Integer gameTimeInMinutes = 45;
-	private Integer amountOfGoalsToGenerate = 2;
 	
-    private List<Fixture> listOfAllFixtures;
-    private List<Goals> listOfGoalsInAFixture;
-
     @Shared
     GetSteps getSteps;
 
     @Shared
     PostSteps postSteps;
 
-
     @Shared
     AssertionSteps assertionSteps;
+    
+    
+    private Long newFixtureId = 333L;
+	private Integer gameTimeInMinutes = 45;
+	private Integer amountOfGoalsToGenerate = 2;
+	
+	private List<Teams> teamsList;
+    private List<Goals> listOfGoalsInAFixture;
+    private List<Fixture> listOfAllFixturesBeforeUpdate;
+    
+    private Fixture fixtureToCreate;
+    private Fixture fixtureToRetrieve;
+    
+    private Type fixtureListType = new TypeToken<ArrayList<Fixture>>() {}.getType();
 
     @Before
     public void Setup() {
     	this.listOfGoalsInAFixture = ModelGenerator.generateAListOfGoalsForAFixture(
     			this.amountOfGoalsToGenerate, 
     			this.gameTimeInMinutes, 
-    			true, 
+    			false, 
     			false,
     			Period.FIRST_HALF);
     	
+    	this.teamsList = ModelGenerator.generateAListOfTwoTeamsAtRandom();
+    	
     	FootballFullState fullState = new FootballFullState.FootballFullStateBuilder()
-    			.withHomeTeam("Swansea")
-    			.withAwayTeam("Cardiff")
+    			.withHomeTeam(this.getSteps.getTeamByAssociation(this.teamsList, Team.HOME.getTeam()))
+    			.withAwayTeam(this.getSteps.getTeamByAssociation(this.teamsList, Team.AWAY.getTeam()))
     			.withFinished(true)
     			.withGameTimeInSeconds(this.gameTimeInMinutes)
     			.withGoals(this.listOfGoalsInAFixture)
     			.withPeriod(this.listOfGoalsInAFixture.get(0).getPeriod())
-    			
+    			.withStartDateTime(TimeUtils.getDateTimeNowInISOFormat())
+    			.withStarted(true)
+    			.withTeams(this.teamsList)
     			.build();
     	
-    	Fixture fixture = new Fixture.FixtureBuilder(this.fixtureId)
+    	this.fixtureToCreate = new Fixture.FixtureBuilder(this.newFixtureId)
     			.withFixtureStatus(new FixtureStatus(true))
     			.withFootballFullStateStatus(fullState)
     			.build();
     	
-    	
-    	Type fixtureListType = new TypeToken<ArrayList<Fixture>>() {}.getType();
-    	
     	/* Full list of fixtures before you post a new one to the database */
-        this.listOfAllFixtures = 
+        this.listOfAllFixturesBeforeUpdate = 
         		MapResponseToClass.getJSONObjectsAsClass(
         				this.getSteps.getAllFixtures().jsonPath().prettify(), 
         				fixtureListType);
 
     }
-
+    
 
     @Test
     @WithTags({
@@ -105,44 +114,29 @@ public class PostFixtureTests {
             @WithTag("Post"),
             @WithTag("New Fixture")
     })
-    @Title("")
+    @Title("Store new fixture in database then retrieve it")
     public void storeNewFixtureInDatabaseTest()
     {
+    	assertionSteps.assertEqual("Fixture has been added", this.postSteps.createNewFixture(fixtureToCreate).getBody().toString());
     	
-
+    	this.fixtureToRetrieve = this.getSteps.getNewlyCreatedFixtureWhenAvailable(this.newFixtureId, this.listOfAllFixturesBeforeUpdate);
     }
 
 
-//    @Test
-//    @WithTags({
-//            @WithTag("Fixtures"),
-//            @WithTag("Post"),
-//            @WithTag("HOME")
-//    })
-//    @Title("")
-//    public void assertFirstObjectInTeamsArrayHasHOMETeamId()
-//    {
-//
-//    }
-//
-//
-//    @Test
-//    @WithTags({
-//            @WithTag("Fixtures"),
-//            @WithTag("Post"),
-//            @WithTag("Latency")
-//    })
-//    @Title("")
-//    public void createNewFixtureAgainstSimulatedDelayThenRetrieve()
-//    {
-//        //create a builder for a fixture here so that you may send it off via body parameter in the post method
-//        Fixture fixtureSentToDatabase = new Fixture();
-//        
-//        
-//        this.postSteps.createNewFixture(fixtureSentToDatabase);
-//
-//        Fixture fixtureReceivedFromDatabase = this.getSteps.getNewlyCreatedFixtureWhenAvailable(this.fixtureIdForFixtureToSendViaPostRequest);
-//
-//        assertionSteps.assertEqual(fixtureSentToDatabase.getFixtureId(), fixtureReceivedFromDatabase.getFixtureId());
-//    }
+    @Test
+    @WithTags({
+            @WithTag("Fixtures"),
+            @WithTag("Post"),
+            @WithTag("HOME")
+    })
+    @Title("Assert within the teams array that that the first object has a teamId of HOME")
+    public void assertFirstObjectInTeamsArrayHasHOMETeamId() {
+    	assertionSteps.assertEqual(
+    			this.fixtureToRetrieve
+    			.getFootballFullState()
+    			.getTeams()
+    			.get(0)
+    			.getTeamId(), 
+    			Team.HOME.getTeam());
+    }
 }

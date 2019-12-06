@@ -39,16 +39,16 @@ public class GetFixtureTests {
     AssertionSteps assertionSteps;
     
     private List<Fixture> listOfAllFixtures;
+    
+    //Type token needed at fixture response beginning due to root element of JSON being '[{...}]' and not the usual '{...}'
+	Type fixtureListType = new TypeToken<ArrayList<Fixture>>() {}.getType();
 
     @Before
     public void Setup() {
-    	//Type token needed at fixture response beginning due to root element of JSON being '[{...}]' and not the usual '{...}'
-    	Type fixtureListType = new TypeToken<ArrayList<Fixture>>() {}.getType();
-    	
         this.listOfAllFixtures = 
         		MapResponseToClass.getJSONObjectsAsClass(
         				this.getSteps.getAllFixtures().jsonPath().prettify(), 
-        				fixtureListType);
+        				this.fixtureListType);
 
     }
 

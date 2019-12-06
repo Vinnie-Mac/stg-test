@@ -1,15 +1,8 @@
-/**
- * 
- */
 package com.stgtest.framework.models.footballfullstate;
 
-import java.util.concurrent.TimeUnit;
 
 import com.stgtest.framework.components.Period;
-import com.stgtest.framework.steps.AssertionSteps;
 import com.stgtest.framework.utils.TimeUtils;
-
-import net.thucydides.core.annotations.Shared;
 
 /**
  * {@link Goals} POJO for the 'goals' JSON object which resides within the {@link FootballFullState} JSON object
@@ -17,6 +10,7 @@ import net.thucydides.core.annotations.Shared;
  * @author Vinnie-Mac
  */
 public class Goals {
+	
 	private Integer clockTime;
 	private Boolean confirmed;
 	private Integer id;
@@ -28,7 +22,8 @@ public class Goals {
 	
 	
 	/**
-	 * 
+	 * {@link GoalsBuilder} builder pattern to create a Goals instance more easily
+     * 
 	 * @author Vinnie-Mac
 	 *
 	 */
@@ -45,26 +40,30 @@ public class Goals {
 		
 		
 		/**
+		 * Apply Clock Time value
 		 * 
-		 * @param gameTimeInMinutes
-		 * @param clockTime
-		 * @return
+		 * @param {@link Integer} gameTimeInMinutes
+		 * @param {@link Integer} clockTime
+		 * @return {@link GoalsBuilder}
 		 */
-		public GoalsBuilder withClockTime(Integer gameTimeInMinutes, Integer clockTime) {
-			if(TimeUtils.convertMinutesToSeconds(clockTime) < TimeUtils.convertMinutesToSeconds(gameTimeInMinutes)) {
+		public GoalsBuilder withClockTime(Integer clockTime, Integer gameTimeInMinutes) {
+			Integer compareValue = TimeUtils.convertMinutesToSeconds(clockTime).compareTo(TimeUtils.convertMinutesToSeconds(gameTimeInMinutes));
+			
+			if(compareValue <= 0) {
 				this.clockTime = clockTime.intValue();
 			} else {
 				System.out.println("You cannot have a goal scored beyond the game time as that's not possible - "
-						+ "Choose a goal time that is within the game time in secodns boundary");
+						+ "Choose a goal time that is within the game time in seconds boundary");
 				System.exit(1);
 			}
 			return this;
 		}
 		
 		/**
+		 * Apply Confirmed value
 		 * 
-		 * @param confirmed
-		 * @return
+		 * @param {@link Boolean} confirmed
+		 * @return {@link GoalsBuilder}
 		 */
 		public GoalsBuilder withConfirmed(Boolean confirmed) {
 			this.confirmed = confirmed;
@@ -72,9 +71,10 @@ public class Goals {
 		}
 		
 		/**
+		 * Apply ID value
 		 * 
-		 * @param id
-		 * @return
+		 * @param {@link Integer} id
+		 * @return {@link GoalsBuilder}
 		 */
 		public GoalsBuilder withId(Integer id) {
 			this.id = id;
@@ -83,9 +83,10 @@ public class Goals {
 		
 		
 		/**
+		 * Apply Own Goal value
 		 * 
-		 * @param ownGoal
-		 * @return
+		 * @param {@link Boolean} ownGoal
+		 * @return {@link GoalsBuilder}
 		 */
 		public GoalsBuilder withOwnGoal(Boolean ownGoal) {
 			this.ownGoal = ownGoal;
@@ -94,9 +95,10 @@ public class Goals {
 		
 		
 		/**
+		 * Apply Penalty value
 		 * 
-		 * @param penalty
-		 * @return
+		 * @param {@link Boolean} penalty
+		 * @return {@link GoalsBuilder}
 		 */
 		public GoalsBuilder withPenalty(Boolean penalty) {
 			this.penalty = penalty;
@@ -105,19 +107,22 @@ public class Goals {
 	
 		
 		/**
+		 * Apply Period value
 		 * 
-		 * @param period
-		 * @return
+		 * @param {@link Period} period
+		 * @return {@link GoalsBuilder}
 		 */
 		public GoalsBuilder withPeriod(Period period) {
 			this.period = period.getPeriod();
 			return this;
 		}
 		
+		
 		/**
+		 * Apply Player ID value
 		 * 
-		 * @param playerId
-		 * @return
+		 * @param {@link Integer} playerId
+		 * @return {@link GoalsBuilder}
 		 */
 		public GoalsBuilder withPlayerId(Integer playerId) {
 			this.playerId = playerId;
@@ -126,9 +131,10 @@ public class Goals {
 		
 		
 		/**
+		 * Apply Team ID value
 		 * 
-		 * @param teamId
-		 * @return
+		 * @param {@link String} teamId
+		 * @return {@link GoalsBuilder}
 		 */
 		public GoalsBuilder withTeamId(String teamId) {
 			this.teamId = teamId;
@@ -137,12 +143,21 @@ public class Goals {
 		
 		
 		/**
+		 * Build all the values together in order to create the Goals instance itself
 		 * 
-		 * @return
+		 * @return {@link Goals} instance
 		 */
 		public Goals build() {
 			Goals goals = new Goals();
 			
+			goals.clockTime = this.clockTime;
+			goals.confirmed = this.confirmed;
+			goals.id = this.id;
+			goals.ownGoal = this.ownGoal;
+			goals.penalty = this.penalty;
+			goals.period = this.period;
+			goals.playerId = this.playerId;
+			goals.teamId = this.teamId;
 			
 			return goals;
 		}

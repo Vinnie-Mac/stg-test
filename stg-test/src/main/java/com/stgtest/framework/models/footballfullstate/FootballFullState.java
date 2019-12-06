@@ -27,8 +27,9 @@ public class FootballFullState {
 	
 	
 	/**
-     * {@link FootballFullStateBuilder} builder pattern to create a FootballFullState instance more easily - use with POST request and place
-     * into the body parameter
+     * {@link FootballFullStateBuilder} builder pattern to create a FootballFullState instance more easily
+     * 
+     * @author Vinnie-Mac
      */
     public static class FootballFullStateBuilder {
     	private String homeTeam;
@@ -103,7 +104,7 @@ public class FootballFullState {
             return this;
         }
         
-        
+ 
         /**
          * Apply Goals value
          *
@@ -194,7 +195,7 @@ public class FootballFullState {
          * @param  {@link Boolean}
          * @return {@link FootballFullStateBuilder}
          */
-        public FootballFullStateBuilder with(Boolean started) {
+        public FootballFullStateBuilder withStarted(Boolean started) {
             this.started = started;
             return this;
         }
@@ -206,16 +207,16 @@ public class FootballFullState {
          * @param  {@link List<Teams>}
          * @return {@link FootballFullStateBuilder}
          */
-        public FootballFullStateBuilder with(List<Teams> teams) {
+        public FootballFullStateBuilder withTeams(List<Teams> teams) {
             this.teams = teams ;
             return this;
         }
 
         
         /**
-         * Build the Fixture instance after setting all needed values to the fixture fields that are called upon
+         * Build the FootballFullState instance after setting all needed values to the fields that are called upon
          *
-         * @return {@link Fixture}
+         * @return {@link FootballFullState}
          */
         public FootballFullState build() {
             FootballFullState footballFullState = new FootballFullState();

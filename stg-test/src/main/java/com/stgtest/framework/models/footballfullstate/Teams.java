@@ -1,5 +1,8 @@
 package com.stgtest.framework.models.footballfullstate;
 
+
+import com.stgtest.framework.components.Team;
+
 /**
  * 
  * {@link Team} class responsible  for storing Team based information 

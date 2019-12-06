@@ -2,12 +2,18 @@ package com.stgtest.framework.utils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
 import com.stgtest.framework.components.Period;
 import com.stgtest.framework.components.Team;
+import com.stgtest.framework.components.TeamNames;
+import com.stgtest.framework.models.Fixture;
+import com.stgtest.framework.models.FixtureStatus;
+import com.stgtest.framework.models.footballfullstate.FootballFullState;
 import com.stgtest.framework.models.footballfullstate.Goals;
+import com.stgtest.framework.models.footballfullstate.Teams;
 
 /**
  * {@link ModelGenerator} class responsible for generating either a singular instance or list of instances for a given model/class
@@ -34,9 +40,7 @@ public class ModelGenerator {
 		
 		for(int i = 0; i < amountOfGoalsToGenerate; i++) {
 			listOfGeneratedGoals.add(i, new Goals.GoalsBuilder()
-					.withClockTime(
-							gameTimeInMinutes, 
-							NumberUtils.chooseRandomNumberWithinGivenRange(10, gameTimeInMinutes))
+					.withClockTime(NumberUtils.chooseRandomNumberWithinGivenRange(10, gameTimeInMinutes), gameTimeInMinutes)
 					.withConfirmed(true)
 					.withId(NumberUtils.chooseRandomNumberWithinGivenRange(1, 1000))
 					.withOwnGoal(ownGoal)
@@ -48,6 +52,49 @@ public class ModelGenerator {
 		}
 		
 		return listOfGeneratedGoals;
+	}
+	
+	
+	/**
+	 * Generate a list of two teams with HOME and AWAY associations
+	 * 
+	 * @return {@link List<Teams>} list of teams with HOME and AWAY associations 
+	 */
+	public static List<Teams> generateAListOfTwoTeamsAtRandom() {
+		List<String> teamList = new LinkedList<>(
+				Arrays.asList(
+						TeamNames.OSTERREICH.getTeamName(),
+						TeamNames.DAGENHAM_AND_REDBRIDGE.getTeamName(),
+						TeamNames.MANCHESTER_UNITED.getTeamName(),
+						TeamNames.GARFORTH_FC.getTeamName(),
+						TeamNames.LEEDS_UNITED.getTeamName(),
+						TeamNames.YORK_FC.getTeamName(),
+						TeamNames.SWANSEA.getTeamName(),
+						TeamNames.CARDIFF.getTeamName())
+				);
+		
+		return pickHomeAndAwayTeams(teamList);	
+	}
+	
+	
+	/**
+	 * Select two teams from a list of team names. One being a home team and the other being an away team
+	 * 
+	 * @param {@link List<String>} teamList list of teams to choose from
+	 * @return {@link List<Teams>} two teams that are associated with HOME and AWAY
+	 */
+	private static List<Teams> pickHomeAndAwayTeams(List<String> teamList) {
+		List<Teams> listOfTeams = new ArrayList<Teams>();
+		
+		String homeTeam = teamList.get(new Random().nextInt((teamList.size())));
+		listOfTeams.add(new Teams(Team.HOME.getTeam(), homeTeam, Team.HOME.getTeam()));
+		teamList.remove(homeTeam);
+		
+		String awayTeam = teamList.get(new Random().nextInt((teamList.size())));
+		listOfTeams.add(new Teams(Team.AWAY.getTeam(), awayTeam, Team.AWAY.getTeam()));
+		
+		return listOfTeams;
+		
 	}
 
 }

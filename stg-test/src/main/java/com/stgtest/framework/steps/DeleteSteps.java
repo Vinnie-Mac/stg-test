@@ -25,7 +25,7 @@ public class DeleteSteps {
      * @return {@link Response}
      */
     @Step("Delete fixture by Id value of '{0}'")
-    public Response deleteFixtureById(Integer fixtureId)
+    public Response deleteFixtureById(Long fixtureId)
     {
         Response response =  SerenityRest.given()
                 .baseUri(TestBase.getBaseUri())

@@ -1,8 +1,7 @@
 package com.stgtest.framework.components;
 
 /**
- * {@link Team} enum responsible for holding two values that stipulate the specific period a football match is currently at OR 
- * to stipulate when a goal is scored within a given period of a football game
+ * {@link Team} enum responsible for stipulating if a team is an AWAY team or a HOME team
  * 
  * @author Vinnie-Mac
  *
@@ -10,7 +9,7 @@ package com.stgtest.framework.components;
 public enum Team {
 	
 	HOME("HOME"),
-	AWAY("HOME");
+	AWAY("AWAY");
 	
 	String team;
 
