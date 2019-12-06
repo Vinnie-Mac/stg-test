@@ -16,9 +16,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * {@link GetSteps} Steps class to use the GET http method exclusively in test operations
+ * {@link GetSteps} Steps class to use the GET HTTP method exclusively in test operations
+ * 
+ * @author Vinnie-Mac
  */
 public class GetSteps {
+	
 	@Shared
 	AssertionSteps assertionSteps;
 
@@ -108,7 +111,7 @@ public class GetSteps {
             }
 
             try{
-                Thread.sleep(500);//slight sleep wait in order to not absolutely hammer the API with requests within the loop
+                Thread.sleep(500);//slight sleep in order to not absolutely hammer the API with requests within the loop
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

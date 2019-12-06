@@ -7,6 +7,8 @@ import net.thucydides.core.annotations.Step;
 
 /**
  * {@link AssertionSteps} Steps class to use assertions throughout testing operations
+ * 
+ * @author Vinnie-Mac
  */
 public class AssertionSteps {
 

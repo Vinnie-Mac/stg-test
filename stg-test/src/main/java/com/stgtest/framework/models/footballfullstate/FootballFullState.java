@@ -1,6 +1,7 @@
 package com.stgtest.framework.models.footballfullstate;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import com.stgtest.framework.models.Fixture;
 
@@ -90,13 +91,15 @@ public class FootballFullState {
         
         
         /**
-         * Apply GameTimeInSeconds value
+         * Apply GameTimeInSeconds value by taking in the total minutes that have passed and converting to seconds so that it
+         * satisfies the POST request requirements
          *
-         * @param  {@link Integer }
+         * @param  {@link Integer } value of game time passed in minutes
          * @return {@link FootballFullStateBuilder}
          */
-        public FootballFullStateBuilder withGameTimeInSeconds(Integer gameTimeInSeconds) {
-            this.gameTimeInSeconds = gameTimeInSeconds;
+        public FootballFullStateBuilder withGameTimeInSeconds(Integer gameTimeInMinutes) {
+        	Long gameTimeInSeconds = TimeUnit.MINUTES.toSeconds(gameTimeInMinutes);
+            this.gameTimeInSeconds = gameTimeInSeconds.intValue();
             return this;
         }
         
@@ -119,7 +122,7 @@ public class FootballFullState {
          * @param  {@link String}
          * @return {@link FootballFullStateBuilder}
          */
-        public FootballFullStateBuilder with(String period) {
+        public FootballFullStateBuilder withPeriod(String period) {
             this.period = period;
             return this;
         }

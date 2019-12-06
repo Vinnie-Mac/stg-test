@@ -25,6 +25,8 @@ import java.util.List;
  * <h3>1. Retrieve all fixtures</h3
  * <i>i. Assert that there are 3 fixtures within the returned object.</i>
  * <br><i>ii. Assert that each of the 3 fixtures has a fixtureId value.</i>
+ * 
+ * @author Vinnie-Mac
  */
 @RunWith(SerenityRunner.class)
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
@@ -55,14 +57,15 @@ public class GetFixtureTests {
     @WithTags({
             @WithTag("Fixtures"),
             @WithTag("Get"),
+            @WithTag("list")
     })
     @Title("Get all fixtures that currently live within the database and assert that the list size is equal to 3")
     public void assertAllFixturesListSizeEqualToThreeTest()
     {
-    	Integer actual = this.listOfAllFixtures.size();
     	Integer expected = 3;
+    	Integer actual = this.listOfAllFixtures.size();
     	
-        assertionSteps.assertEqual(actual, expected);
+        assertionSteps.assertEqual(expected, actual);
     }
 
 
@@ -70,16 +73,17 @@ public class GetFixtureTests {
     @WithTags({
             @WithTag("Fixtures"),
             @WithTag("Get"),
+            @WithTag("id")
     })
     @Title("Use the total list of fixtures gathered from the database and assert they each have a fixtureid value")
     public void assertAllFixturesContainIdValueTest()
     {
         for (int i = 0; i < this.listOfAllFixtures.size(); i++)
         {	
-        	Integer expected = i+1;
+			String expected = String.valueOf(i+1);
         	String actual =  this.listOfAllFixtures.get(i).getFixtureId().toString();
         	
-            assertionSteps.assertEqual(actual, expected.toString());
+            assertionSteps.assertEqual(expected, actual);
         }
     }
 }

@@ -9,7 +9,9 @@ import net.thucydides.core.annotations.Shared;
 import net.thucydides.core.annotations.Step;
 
 /**
- * {@link DeleteSteps} Steps class to use the DELETE http method exclusively in test operations
+ * {@link DeleteSteps} Steps class to use the DELETE HTTP method exclusively in test operations
+ * 
+ * @author Vinnie-Mac
  */
 public class DeleteSteps {
 
