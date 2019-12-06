@@ -1,7 +1,9 @@
 package com.stgtest.framework.components;
 
 /**
- * {@link} Enum class containing all variations of Uri Path needed to exact various HTTP requests
+ * {@link UriPath} Enum class containing all variations of Uri Path needed to exact various HTTP requests
+ * 
+ * @author Vinnie-Mac
  */
 public enum UriPath {
     ALL_FIXTURES("/fixtures"),

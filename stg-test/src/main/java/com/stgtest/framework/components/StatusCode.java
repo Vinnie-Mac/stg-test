@@ -1,5 +1,10 @@
 package com.stgtest.framework.components;
 
+/**
+ * {@link StatusCode} enum used to house all HTTP status code values to be used within assertions throughout testing operations 
+ * 
+ * @author Vinnie-Mac
+ */
 public enum StatusCode {
 	
 	/* Full list of codes for expandability of this framework - You may assert any many variations of status code */
@@ -72,11 +77,17 @@ public enum StatusCode {
 	NETWORK_CONNECT_TIMEOUT_ERROR(599, "599");
 
 
-	int codeValue;
+	Integer codeValue;
 	String codeValueAsString;
 
 
-	StatusCode(final int codeValue, final String codeValueAsString)
+	/**
+	 * Basic constructor 
+	 * 
+	 * @param {@link Integer} value of HTTP status code
+	 * @param {@link String} value of HTTP status code
+	 */
+	StatusCode(final Integer codeValue, final String codeValueAsString)
 	{
 		this.codeValue = codeValue;
 		this.codeValueAsString = codeValueAsString;
@@ -103,5 +114,4 @@ public enum StatusCode {
 	{
 		return this.codeValueAsString;
 	}
-
 }

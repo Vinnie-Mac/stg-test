@@ -5,6 +5,8 @@ import com.stgtest.framework.models.footballfullstate.FootballFullState;
 /**
  * {@link Fixture} class containing the Fixture object values and the FixtureBuilder used to construct a new fixture if
  * needing to create one in the system/database
+ * 
+ * @author Vinnie-Mac
  */
 public class Fixture {
 

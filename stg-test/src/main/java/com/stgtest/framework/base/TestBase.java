@@ -6,6 +6,8 @@ import java.nio.file.Paths;
 
 /**
  * {@link TestBase} class responsible for holding base level information in order to allow the framework to execute tests
+ * 
+ * @author Vinnie-Mac
  */
 public class TestBase {
 
@@ -15,10 +17,10 @@ public class TestBase {
 
 
     /**
-     * Return the base uri as string format in order to be used throughout SerenityRest calls within each of the steps
+     * Return the base URI as string format in order to be used throughout SerenityRest calls within each of the steps
      * classes
      *
-     * @return {@link String} base uri value as string
+     * @return {@link String} base URI value as string
      */
     public static String getBaseUri()
     {

@@ -4,10 +4,9 @@
 package com.stgtest.framework.models.footballfullstate;
 
 /**
- * @author Vinnie Mac
- * 
  * {@link Goals} POJO for the 'goals' JSON object which resides within the {@link FootballFullState} JSON object
  *
+ * @author Vinnie-Mac
  */
 public class Goals {
 	private Integer clockTime;

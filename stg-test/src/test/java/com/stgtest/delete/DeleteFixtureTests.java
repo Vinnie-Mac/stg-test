@@ -51,7 +51,7 @@ public class DeleteFixtureTests {
     @Before
     public void Setup() {
     	this.fixtureToSendToDatabase = new Fixture.FixtureBuilder(this.fixtureIdForFixtureToSendViaPostRequest)
-    			.withFixtureStatus(new FixtureStatus())
+    			.withFixtureStatus(new FixtureStatus(true))
     			.withFootballFullStateStatus(new FootballFullState())
     			.build();
     	

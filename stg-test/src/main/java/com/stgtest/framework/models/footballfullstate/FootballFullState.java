@@ -1,18 +1,13 @@
 package com.stgtest.framework.models.footballfullstate;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import com.stgtest.framework.models.Fixture;
-import com.stgtest.framework.models.FixtureStatus;
-import com.stgtest.framework.models.Fixture.FixtureBuilder;
 
 /**
- * 
- * @author Vinnie Mac
- * 
  * {@link FootballFullState} POJO for the 'footballFullState' JSON object which resides within the {@link Fixture} JSON object
+ * 
+ * @author Vinnie-Mac
  */
 public class FootballFullState {
 	private String homeTeam;
